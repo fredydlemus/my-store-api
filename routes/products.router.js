@@ -1,5 +1,5 @@
 const express = require("express");
-const ProductService = require('../services/product.service');
+const ProductService = require("../services/product.service");
 
 const router = express.Router();
 const service = new ProductService();
@@ -13,10 +13,14 @@ router.get("/filter", (req, res) => {
   res.send("filter");
 });
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const product = await service.findOne(id);
-  res.json(product);
+router.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await service.findOne(id);
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -25,18 +29,15 @@ router.post("/", async (req, res) => {
   res.status(201).json(newProduct);
 });
 
-router.patch("/:id", async (req, res) => {
-  try{
+router.patch("/:id", async (req, res, next) => {
+  try {
     const body = req.body;
-  const { id } = req.params;
-  const product = await service.update(id, body);
-  res.json(product);
-  }catch(e){
-    res.status(404).json({
-      message: e.message,
-    });
+    const { id } = req.params;
+    const product = await service.update(id, body);
+    res.json(product);
+  } catch (e) {
+    next(e);
   }
-  
 });
 
 router.put("/:id", (req, res) => {
