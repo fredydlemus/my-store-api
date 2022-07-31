@@ -12,6 +12,6 @@ const sequelize = new Sequelize(URI, {
 });
 
 setupModels(sequelize);
-sequelize.sync();
+// sequelize.sync(); //Create tables in base to the models NOT FOR PRODUCTION
 
 module.exports = sequelize;
